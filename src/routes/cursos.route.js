@@ -1,32 +1,13 @@
 const { Router, query } = require('express') 
 const CursoController = require('../controllers/CursoController')
 const Curso = require('../models/Curso')
-const { Op } = require("sequelize");
 
 const { auth } = require('../middleware/auth')
 
 const cursoRoutes = new Router()
 
 cursoRoutes.post('/', CursoController.cadastar)
-
-cursoRoutes.get('/', auth, async (req, res) => {
-    let params = {}
-
-    if(req.query.search_nome)  {
-        params.nome = {[Op.iLike]: req.query.search_nome}      
-    }
-
-    if(req.query.search_horas)  {
-        params.duracao_horas = req.query.search_horas
-    }
-
-    const cursos = await Curso.findAll({
-        where: params,
-        order: [['id', 'ASC']]
-    })
-
-    res.json(cursos)
-})
+cursoRoutes.get('/', auth,  CursoController.listarTodos)
 
 
 cursoRoutes.put('/:id', auth, async (req, res) => {
