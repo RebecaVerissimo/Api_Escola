@@ -1,4 +1,5 @@
 const Curso = require("../models/Curso")
+const { Op } = require("sequelize");
 
 
 class CursoController {
@@ -25,6 +26,30 @@ class CursoController {
         } catch (error){
             console.log(error.message)
             res.status(400).json({message: "Não foi possivel cadastar o curso"})
+        }
+    }
+
+    async listarTodos(req,res){
+        try {
+            let params = {}
+
+            if(req.query.search_nome)  {
+                params.nome = {[Op.iLike]: req.query.search_nome}      
+            }
+
+            if(req.query.search_horas)  {
+                params.duracao_horas = req.query.search_horas
+            }
+
+            const cursos = await Curso.findAll({
+                where: params,
+                order: [['id', 'ASC']]
+            })
+
+            res.json(cursos)
+        } catch (error) {
+            console.log(error.message)
+            res.status(500).json({ error: 'Não possível listar todos os cursos' })
         }
     }
 
