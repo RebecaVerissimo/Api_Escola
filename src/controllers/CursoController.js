@@ -53,6 +53,23 @@ class CursoController {
         }
     }
 
+    async deletar(req,res){
+        const { id } = req.params
+
+        const curso = await Curso.findByPk(id)
+        if(!curso){
+            return res.status(404).json({message: 'Curso não encontrado'})
+        }
+
+        Curso.destroy({
+            where: {
+            id:id
+            }
+        })
+
+        return res.status(204).json({})
+    }
+
 }    
 
 module.exports = new CursoController
