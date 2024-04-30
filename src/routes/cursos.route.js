@@ -8,6 +8,7 @@ const cursoRoutes = new Router()
 
 cursoRoutes.post('/', CursoController.cadastar)
 cursoRoutes.get('/', auth,  CursoController.listarTodos)
+cursoRoutes.delete('/:id', auth, CursoController.deletar)
 
 
 cursoRoutes.put('/:id', auth, async (req, res) => {
@@ -25,25 +26,6 @@ cursoRoutes.put('/:id', auth, async (req, res) => {
         return res.status(404).send('Curso não encontrado.')
     }
     
-})
-
-
-
-cursoRoutes.delete('/:id', auth, async (req, res) => {
-    const { id } = req.params
-
-    const curso = await Curso.findByPk(id)
-    if(!curso){
-        return res.status(404).json({message: 'Curso não encontrado'})
-    }
-
-    Curso.destroy({
-        where: {
-            id:id
-        }
-    })
-
-    return res.status(204).json({message: 'Curso removido'})
 })
 
 module.exports = cursoRoutes
