@@ -70,6 +70,22 @@ class CursoController {
         return res.status(204).json({})
     }
 
+    async atualizar(req,res){
+        try {
+            const { id } = req.params
+            const newData = req.body
+            const curso = await Curso.findByPk(id)
+            if (curso){
+               await Curso.update(newData, {where:{id:id}})
+           
+            res.status(200).send(curso)
+            }
+            
+        } catch (error) {
+            return res.status(404).send('Curso não encontrado.')
+        }
+    }
+
 }    
 
 module.exports = new CursoController
